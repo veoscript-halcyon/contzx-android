@@ -1,23 +1,26 @@
 import React from 'react'
 import MainLayout from '../layouts/MainLayout'
-import HomeLayout from '../layouts/PageLayout/HomeLayout'
+import EditContactLayout from '../layouts/PageLayout/EditContactLayout'
 import NavBar from '../components/NavBar'
 
 interface NavigationProps {
   navigation: any
+  route: any
 }
 
-const HomeScreen: React.FC<NavigationProps> = ({ navigation }) => {
+const EditContactScreen: React.FC<NavigationProps> = ({ navigation, route }) => {
   return (
     <MainLayout>
       <NavBar
         title="Contzx"
-        subtitle="Public Contacts"
+        subtitle="Edit Contact"
         navigation={navigation}
       />
-      <HomeLayout navigation={navigation} />
+      <EditContactLayout
+        contact={route.params}
+      />
     </MainLayout>
   )
 }
 
-export default HomeScreen
+export default EditContactScreen

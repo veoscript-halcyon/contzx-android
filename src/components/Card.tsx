@@ -12,9 +12,10 @@ interface TypedProps {
     gender: string
     status: string
   }
+  navigation: any
 }
 
-const Card: React.FC<TypedProps> = ({ contact }) => {
+const Card: React.FC<TypedProps> = ({ contact, navigation }) => {
   return (
     <View style={tw`flex flex-col rounded-xl p-5 mb-2 bg-[#2f313e]`}>
       <Text style={[tw`text-white text-lg mb-3`, fonts.fontPoppinsBold]}>
@@ -42,19 +43,10 @@ const Card: React.FC<TypedProps> = ({ contact }) => {
       </View>
       <View style={tw`flex flex-row items-center justify-center w-full`}>
         <TouchableOpacity
-          style={tw`flex flex-row items-center justify-center w-[6rem] px-3 py-2 rounded-lg bg-blue-500`}
-          activeOpacity={0.8}
-          onPress={() => {
-            console.log('Go to View Page')
-          }}
-        >
-          <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>View</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           style={tw`flex flex-row items-center justify-center w-[6rem] px-3 py-2 mx-2 rounded-lg bg-green-500`}
           activeOpacity={0.8}
           onPress={() => {
-            console.log('Go to Edit Page')
+            navigation.push('EditContact', contact)
           }}
         >
           <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Edit</Text>

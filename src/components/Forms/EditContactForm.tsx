@@ -4,7 +4,7 @@ import { fonts } from '../../styles/global'
 import { useForm, Controller } from 'react-hook-form'
 import { Dropdown } from 'react-native-element-dropdown'
 import { ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
-import { useStoreContact } from '../../lib/ReactQuery'
+import { useUpdateContact } from '../../lib/ReactQuery'
 import { useNavigation } from '@react-navigation/native'
 
 interface FormData {
@@ -13,16 +13,27 @@ interface FormData {
   address: string
 }
 
-const NewContactForm = () => {
+interface TypedProps {
+  contact: {
+    id: string
+    name: string
+    phone: string
+    address: string
+    gender: string
+    status: string
+  }
+}
 
-  const storeContact = useStoreContact()
+const EditContactForm: React.FC<TypedProps> = ({ contact }) => {
+
+  const updateContact = useUpdateContact()
 
   const navigation = useNavigation()
 
-  const [genderTypeValue, setGenderTypeValue] = React.useState<string>('')
+  const [genderTypeValue, setGenderTypeValue] = React.useState<string>(contact.gender)
   const [genderTypeError, setGenderTypeError] = React.useState(false)
 
-  const [statusTypeValue, setStatusTypeValue] = React.useState<string>('')
+  const [statusTypeValue, setStatusTypeValue] = React.useState<string>(contact.status)
   const [statusTypeError, setStatusTypeError] = React.useState(false)
 
   const genderTypes = [
@@ -39,14 +50,15 @@ const NewContactForm = () => {
   ];
 
   const defaultValues = {
-    name: '',
-    phone: '',
-    address: ''
+    name: contact.name,
+    phone: contact.phone,
+    address: contact.address
   }
 
   const { control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({ defaultValues })
 
-  const onSave = async (formData: FormData) => {
+  const onUpdate = async (formData: FormData) => {
+    const id = contact.id
     const name = formData.name
     const phone = formData.phone
     const address = formData.address
@@ -55,7 +67,8 @@ const NewContactForm = () => {
 
     if (gender === '') return setGenderTypeError(true)
 
-    await storeContact.mutateAsync({
+    await updateContact.mutateAsync({
+      id: id,
       name: name,
       phone: phone,
       address: address,
@@ -177,24 +190,28 @@ const NewContactForm = () => {
         </View>
         <View style={tw`flex flex-row items-center justify-center mt-2 mb-2`}>
           {isSubmitting && (
-            <View style={[tw`flex flex-row items-center justify-center w-full p-3 rounded-lg bg-blue-500 bg-opacity-30`, fonts.fontPoppins]}>
-              <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Saving...</Text>
+            <View style={[tw`flex flex-row items-center justify-center w-full p-3 rounded-lg bg-green-500 bg-opacity-30`, fonts.fontPoppins]}>
+              <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Updating...</Text>
             </View>
           )}
           {!isSubmitting && (
             <React.Fragment>
               <TouchableOpacity
-              style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-l-lg bg-blue-500`, fonts.fontPoppins]}
+              style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-l-lg bg-green-500`, fonts.fontPoppins]}
                 activeOpacity={0.8}
-                onPress={handleSubmit(onSave)}
+                onPress={handleSubmit(onUpdate)}
               >
-                <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Save</Text>
+                <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Update</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-r-lg bg-gray-700`, fonts.fontPoppins]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  reset()
+                  reset({
+                    name: '',
+                    phone: '',
+                    address: ''
+                  })
                   setGenderTypeValue('')
                   setStatusTypeValue('')
                 }}
@@ -209,4 +226,4 @@ const NewContactForm = () => {
   )
 }
 
-export default NewContactForm
+export default EditContactForm
