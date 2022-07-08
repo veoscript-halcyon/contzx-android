@@ -18,7 +18,7 @@ const HomeLayout= () => {
       )}
       {isError && (
         <View style={tw`flex flex-col items-center justify-center h-full`}>
-          <Text style={[tw`text-white text-lg`, fonts.fontPoppinsBold]}>Ooops! There is an error...</Text>
+          <Text style={[tw`text-white text-lg`, fonts.fontPoppinsBold]}>Ooops! There is an error, check your internet...</Text>
         </View>
       )}
       {!isLoading && (
