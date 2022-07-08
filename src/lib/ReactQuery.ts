@@ -31,3 +31,21 @@ export const useStoreContact = () => {
     }
   )
 }
+
+export const useUpdateContact = () => {
+  const queryClient = useQueryClient()
+  return useMutation((_args: { id: string, name: string, phone: string, address: string, gender: string, status: string }) =>
+    api.put(`/api/update-contact/${String(_args.id)}`, {
+      name: _args.name,
+      phone: _args.phone,
+      address: _args.address,
+      gender: _args.gender,
+      status: _args.status
+    }),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries('contacts')
+      }
+    }
+  )
+}

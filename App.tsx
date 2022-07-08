@@ -1,6 +1,7 @@
 import React from 'react'
 import HomeScreen from './src/pages/HomeScreen'
 import NewContactScreen from './src/pages/NewContactScreen'
+import EditContactScreen from './src/pages/EditContactScreen'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { StatusBar } from 'react-native'
@@ -29,6 +30,11 @@ const App = () => {
             <Stack.Screen
               name="NewContact"
               component={NewContactScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EditContact"
+              component={EditContactScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

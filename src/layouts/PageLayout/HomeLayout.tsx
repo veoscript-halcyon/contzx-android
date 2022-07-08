@@ -5,7 +5,11 @@ import { fonts } from '../../styles/global'
 import { useGetContacts } from '../../lib/ReactQuery'
 import { ScrollView, View, Text } from 'react-native'
 
-const HomeLayout= () => {
+interface TypedProps {
+  navigation: any
+}
+
+const HomeLayout: React.FC<TypedProps> = ({ navigation }) => {
 
   const { data: contacts, isLoading, isError } = useGetContacts()
 
@@ -28,6 +32,7 @@ const HomeLayout= () => {
               <Card
                 key={contact.id}
                 contact={contact}
+                navigation={navigation}
               />
             ))}
           </View>
