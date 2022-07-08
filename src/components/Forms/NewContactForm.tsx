@@ -4,21 +4,25 @@ import { fonts } from '../../styles/global'
 import { useForm, Controller } from 'react-hook-form'
 import { Dropdown } from 'react-native-element-dropdown'
 import { ScrollView, View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { useStoreContact } from '../../lib/ReactQuery'
+import { useNavigation } from '@react-navigation/native'
 
 interface FormData {
   name: string
   phone: string
-  gender: string
-  status: string
   address: string
 }
 
 const NewContactForm = () => {
 
-  const [genderTypeValue, setGenderTypeValue] = React.useState(null)
+  const storeContact = useStoreContact()
+
+  const navigation = useNavigation()
+
+  const [genderTypeValue, setGenderTypeValue] = React.useState<string>('')
   const [genderTypeError, setGenderTypeError] = React.useState(false)
 
-  const [statusTypeValue, setStatusTypeValue] = React.useState(null)
+  const [statusTypeValue, setStatusTypeValue] = React.useState<string>('')
   const [statusTypeError, setStatusTypeError] = React.useState(false)
 
   const genderTypes = [
@@ -49,12 +53,22 @@ const NewContactForm = () => {
     const gender = genderTypeValue
     const status = statusTypeValue
 
-    console.log({
+    if (gender === '') return setGenderTypeError(true)
+
+    await storeContact.mutateAsync({
       name: name,
       phone: phone,
       address: address,
       gender: gender,
       status: status
+    },
+    {
+      onError: (error) => {
+        console.log(error)
+      },
+      onSuccess: () => {
+        navigation.goBack()
+      }
     })
   }
 
@@ -80,6 +94,7 @@ const NewContactForm = () => {
               />
             )}
           />
+          {errors.name && <Text style={[tw`text-xs text-red-600 ml-1 mt-0.5`, fonts.fontPoppinsLight]}>Name is required.</Text>}
         </View>
         <View style={tw`flex flex-col mb-2`}>
           <Text style={[tw`text-neutral-400 text-sm ml-2 mb-1`, fonts.fontPoppins]}>Phone</Text>
@@ -100,6 +115,7 @@ const NewContactForm = () => {
               />
             )}
           />
+          {errors.phone && <Text style={[tw`text-xs text-red-600 ml-1 mt-0.5`, fonts.fontPoppinsLight]}>Phone is required.</Text>}
         </View>
         <View style={tw`flex flex-col mb-2`}>
           <Text style={[tw`text-neutral-400 text-sm ml-2 mb-1`, fonts.fontPoppins]}>Gender</Text>
@@ -118,9 +134,10 @@ const NewContactForm = () => {
               setGenderTypeError(false)
             }}
           />
+          {genderTypeError && <Text style={[tw`text-xs text-red-600 ml-1 mt-0.5`, fonts.fontPoppinsLight]}>Gender is required.</Text>}
         </View>
         <View style={tw`flex flex-col mb-2`}>
-          <Text style={[tw`text-neutral-400 text-sm ml-2 mb-1`, fonts.fontPoppins]}>Status</Text>
+          <Text style={[tw`text-neutral-400 text-sm ml-2 mb-1`, fonts.fontPoppins]}>Civil Status</Text>
           <Dropdown
             style={[tw`p-2 rounded-lg border border-transparent text-lg text-white bg-[#2f313e]`, fonts.fontPoppins]}
             selectedTextStyle={[tw`text-base text-white`, fonts.fontPoppins]}
@@ -135,6 +152,7 @@ const NewContactForm = () => {
               setStatusTypeError(false)
             }}
           />
+          {statusTypeError && <Text style={[tw`text-xs text-red-600 ml-1 mt-0.5`, fonts.fontPoppinsLight]}>Civil Status is required.</Text>}
         </View>
         <View style={tw`flex flex-col mb-2`}>
           <Text style={[tw`text-neutral-400 text-sm ml-2 mb-1`, fonts.fontPoppins]}>Address</Text>
@@ -155,26 +173,36 @@ const NewContactForm = () => {
               />
             )}
           />
+          {errors.address && <Text style={[tw`text-xs text-red-600 ml-1 mt-0.5`, fonts.fontPoppinsLight]}>Address is required.</Text>}
         </View>
         <View style={tw`flex flex-row items-center justify-center mt-2 mb-2`}>
-          <TouchableOpacity
-            style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-l-lg bg-blue-500`, fonts.fontPoppins]}
-            activeOpacity={0.8}
-            onPress={handleSubmit(onSave)}
-          >
-            <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-r-lg bg-gray-700`, fonts.fontPoppins]}
-            activeOpacity={0.8}
-            onPress={() => {
-              reset()
-              setGenderTypeValue(null)
-              setStatusTypeValue(null)
-            }}
-          >
-            <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Clear</Text>
-          </TouchableOpacity>
+          {isSubmitting && (
+            <View style={[tw`flex flex-row items-center justify-center w-full p-3 rounded-lg bg-blue-500 bg-opacity-30`, fonts.fontPoppins]}>
+              <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Saving...</Text>
+            </View>
+          )}
+          {!isSubmitting && (
+            <React.Fragment>
+              <TouchableOpacity
+              style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-l-lg bg-blue-500`, fonts.fontPoppins]}
+                activeOpacity={0.8}
+                onPress={handleSubmit(onSave)}
+              >
+                <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[tw`flex flex-row items-center justify-center w-[10.5rem] p-3 rounded-r-lg bg-gray-700`, fonts.fontPoppins]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  reset()
+                  setGenderTypeValue('')
+                  setStatusTypeValue('')
+                }}
+              >
+                <Text style={[tw`text-white text-base`, fonts.fontPoppins]}>Clear</Text>
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
         </View>
       </View>
     </ScrollView>
