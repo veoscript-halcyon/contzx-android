@@ -1,4 +1,5 @@
 import React from 'react'
+import Card from '../components/Card'
 import tw from 'twrnc'
 import { fonts } from '../styles/global'
 import { useGetContacts } from '../lib/ReactQuery'
@@ -9,7 +10,7 @@ const HomeLayout= () => {
   const { data: contacts, isLoading, isError } = useGetContacts()
 
   return (
-    <View style={tw`flex flex-col h-full`}>
+    <View style={tw`flex flex-col h-full p-2`}>
       {isLoading && (
         <View style={tw`flex flex-col items-center justify-center h-full`}>
           <Text style={[tw`text-white text-lg`, fonts.fontPoppinsBold]}>Loading...</Text>
@@ -22,11 +23,14 @@ const HomeLayout= () => {
       )}
       {!isLoading && (
         <ScrollView>
-          {contacts.map((contact: { id: number, name: string, phone: string, address: string, gender: string, status: string, created_at: Date, updated_at: Date }) => (
-            <View key={contact.id}>
-              <Text style={tw`text-white text-lg`}>{contact.name}</Text>
-            </View>
-          ))}
+          <View style={tw`mb-16`}>
+            {contacts.map((contact: { id: string, name: string, phone: string, address: string, gender: string, status: string }) => (
+              <Card
+                key={contact.id}
+                contact={contact}
+              />
+            ))}
+          </View>
         </ScrollView>
       )}
     </View>
