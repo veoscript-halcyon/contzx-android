@@ -49,3 +49,15 @@ export const useUpdateContact = () => {
     }
   )
 }
+
+export const useDeleteContact = () => {
+  const queryClient = useQueryClient()
+  return useMutation((_args: { id: string }) =>
+    api.delete(`/api/delete-contact/${String(_args.id)}`),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries('contacts')
+      }
+    }
+  )
+}

@@ -1,7 +1,7 @@
 import React from 'react'
 import tw from 'twrnc'
 import { fonts } from '../styles/global'
-import { MaterialIcon } from './Icons'
+import { MaterialIcon } from '../utils/Icons'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 
