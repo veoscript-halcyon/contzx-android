@@ -1,5 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { onlineManager } from 'react-query'
+import NetInfo from '@react-native-community/netinfo'
 import api from './Axios'
+
+onlineManager.setEventListener(setOnline => {
+  return NetInfo.addEventListener(state => {
+    setOnline(!!state.isConnected)
+  })
+})
 
 export const useGetContacts = () => {
   return useQuery('contacts',
@@ -8,7 +16,9 @@ export const useGetContacts = () => {
       return contacts.data
     },
     {
-      refetchInterval: 1000
+      refetchInterval: onlineManager.isOnline() ? 1000 : false,
+      retry: 3,
+      retryDelay: 2000
     }
   )
 }
