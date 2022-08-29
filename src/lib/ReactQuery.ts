@@ -18,7 +18,7 @@ export const useGetContacts = () => {
     {
       refetchInterval: onlineManager.isOnline() ? 1000 : false,
       retry: 3,
-      retryDelay: 3000
+      retryDelay: 2000
     }
   )
 }
