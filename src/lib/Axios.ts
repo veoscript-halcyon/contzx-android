@@ -5,6 +5,7 @@ const baseURL = 'https://contzx.herokuapp.com'
 
 const api = axios.create({
   baseURL: `${baseURL}`,
+  timeout: 1000,
   headers: {
     'Content-Type': 'application/json'
   }
