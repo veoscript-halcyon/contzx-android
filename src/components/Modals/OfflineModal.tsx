@@ -1,7 +1,6 @@
 import React from 'react'
 import tw from 'twrnc'
 import { fonts } from '../../styles/global'
-import { useForm } from 'react-hook-form'
 import { View, Modal, TouchableOpacity, Text } from 'react-native'
 
 interface TypedProps {
