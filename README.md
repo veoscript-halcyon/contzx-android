@@ -14,7 +14,3 @@ Mobile version of Contzx integration of AdonisJS API
 
 ### Delete Contact
 ![0-02-06-186632be01b1b5e74357b81b73e0ca6644614c139e98a3318110919b09fb0e8b_1f88e1466a9fdf](https://user-images.githubusercontent.com/107969452/180901782-8c50930f-f5dd-40a4-9340-6758feabcba0.png)
-
-## Download the App
-
-> Contzx APK - [Download Here](https://bit.ly/contzx-mobile)
